@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#Скрипт, проверяющий, появились ли новые файлы в директории
+
+#Вставить проверку на отсутствие old.txt
+if ! [[ -e "$1-old.txt" ]]
+then
+	echo "$1-old.txt" | touch 	#пустой файл
+fi
+
+find $1 -print  > "$1-new.txt"
+
+cat "$1-new.txt" | while read string	#Читаем по строчке из new.txt
+do 
+	if ! grep -q --fixed-strings $string "$1-old.txt"	#Те строки, которых нет в old.txt
+	then 
+		echo "$string"
+	fi 
+done
+
+
+echo "Нажмите ENTER чтобы продолжить"
+read pause
+rm "$1-old.txt"
+mv "$1-new.txt" "$1-old.txt"
