@@ -1,8 +1,23 @@
 #!/bin/bash
  #Первый аргумент - название USB (sdb или sdc)
  #Второй аргумент - папка, с которой происходит синхронизация
- #Для работы необходимо создать файл <fname>.rules в /etc/udev/rules.d со следующим содержанием:
-#KERNEL=="sdb", RUN+="~/MyPrograms/2.usb_new_files/usb_new /dev/sdb ~/usb1"
-#KERNEL=="sdc", RUN+="~/MyPrograms/2.usb_new_files/usb_new /dev/sdc ~/usb2"
-DIR="$(dirname $0)"
-"$DIR/synch" "$($DIR/get_usb_path $1)" $2
+tries=0 #Количество попыток запустить скрпит
+path="$(/home/vasilius/MyPrograms/2.usb_new_files/get_usb_path $1)"
+echo $path
+echo "$([ -z $path ])"
+while  [[ -z $path && $tries < 5 ]]	#Пытаемся найти смонтированную флешку
+do
+	echo "$path"
+	echo "$tries attempt: failed" 
+	sleep 5
+	path="$(/home/vasilius/MyPrograms/2.usb_new_files/get_usb_path $1)"
+	tries=$(($tries+1))
+done
+if (( "$tries" >= 5 )) #Если флешка не смонтировалась, чтоб не улетать в бесконечный цикл
+then
+	echo "All attempts failed"
+	exit 1
+fi
+echo "$tries attempt: success" 
+
+/home/vasilius/MyPrograms/2.usb_new_files/synch $path $2	#Запускаем скрипт синхронизации папок из первого задания
