@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "/home/vasilius/MyPrograms/2.usb_new_files/usb_new sdc \"/home/vasilius/usb2\" > /home/vasilius/debug.txt" | at now

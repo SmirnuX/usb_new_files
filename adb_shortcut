@@ -1,0 +1,3 @@
+#!/bin/bash
+#Чтобы не вносить изменения в udev rules каждый раз, все начальные действия описаны здесь
+echo "/home/vasilius/MyPrograms/2.usb_new_files/usb_new sdb \"/home/vasilius/usb1\" > /home/vasilius/debug.txt" | at now	#Выходим из среды udev, так как любой скрипт в udev тормозит монтирование флешки
